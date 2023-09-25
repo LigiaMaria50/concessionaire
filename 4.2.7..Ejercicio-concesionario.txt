@@ -1,0 +1,100 @@
+CREATE TABLE IF NOT EXISTS equipmentcharacteristics (
+    modelequipment_id SERIAL PRIMARY KEY,
+    driver_airbag NUMERIC(2),
+    central_lock NUMERIC(2),
+    air_conditioning VARCHAR(60),
+    passenger_airbag NUMERIC(2),
+    metallic_paint VARCHAR(20)
+);
+
+CREATE TABLE IF NOT EXISTS extraprices (
+    modelextraprices_id SERIAL PRIMARY KEY,
+	driver_airbag_description NUMERIC(2),
+	driver_airbag_price INT,
+    central_lock_description NUMERIC(2),
+	central_lock_price INT,
+	air_conditioning_description VARCHAR(60),
+	air_conditioning_price INT,
+	passenger_airbag_description NUMERIC(2),
+	passenger_airbag_price INT,
+	metallic_paint_description VARCHAR(20),
+	metallic_paint_price INT
+);
+
+CREATE TABLE IF NOt EXISTS cars(
+	car_id SERIAL PRIMARY KEY,
+	brand VARCHAR(20) NOT NULL,
+	frame_number VARCHAR(17) NOT NULL,
+	fiscal_strenght NUMERIC(2,2) NOT NULL,
+	cylinder_capacity NUMERIC(4) NOT NULL,
+	car_price INT NOT NULL,
+	discounts INT,
+	stock_carstore INT NOT NULL,
+    stock_concessionaire INT NOT NULL,
+	modelequipment_id INT NOT NULL,
+	modelextraprices_id INT NOT NULL,
+
+	FOREIGN KEY(modelequipment_id)
+	REFERENCES equipmentcharacteristics(modelequipment_id),
+
+	FOREIGN KEY(modelextraprices_id)
+	REFERENCES extraprices(modelextraprices_id)
+); 
+
+CREATE TABLE IF NOT EXISTS seller_dealer (
+	id_sales_dealer SERIAL PRIMARY KEY,
+	seller_name VARCHAR (45),
+ 	seller_INE NUMERIC (20),
+	address_seller VARCHAR (60),
+	sales_quantity_seller NUMERIC (10),
+	sales_value_seller INT
+);
+
+CREATE TABLE IF NOT EXISTS cars_store (
+	id_car_store SERIAL PRIMARY KEY,
+	store_name VARCHAR (45),
+ 	store_INE NUMERIC (20),
+	address_store VARCHAR (60),
+	sales_quantity_store NUMERIC (10),
+	sales_value_store INT
+);
+
+CREATE TABLE IF NOT EXISTS sales_agent (
+	id_sales_agent SERIAL PRIMARY KEY,
+	id_sales_dealer INT,
+	id_car_store INT,
+	
+	FOREIGN KEY (id_sales_dealer)
+	REFERENCES seller_dealer (id_sales_dealer),
+	
+	FOREIGN KEY (id_car_store)
+	REFERENCES cars_store (id_car_store)	
+);
+
+CREATE TABLE IF NOT EXISTS form_payment (
+	id_form_payment SERIAL PRIMARY KEY,
+	cash INT,
+	financial_entity INT
+); 
+
+CREATE TABLE IF NOT EXISTS sales_invoice (
+	id_sales_invoice SERIAL PRIMARY KEY,
+	car_registration VARCHAR (7),
+	requested_factory VARCHAR (15),
+	delivery_date DATE,
+	id_sales_agent INT,
+	id_form_payment INT,
+
+	FOREIGN KEY (car_id)
+	REFERENCES cars(car_id),
+	
+	FOREIGN KEY (id_sales_agent)
+	REFERENCES sales_agent (id_sales_agent),	
+		
+	FOREIGN KEY (id_form_payment)
+	REFERENCES form_payment (id_form_payment)
+);
+
+
+   
+
